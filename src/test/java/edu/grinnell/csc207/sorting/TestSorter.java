@@ -3,6 +3,7 @@ package edu.grinnell.csc207.sorting;
 import edu.grinnell.csc207.util.ArrayUtils;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,6 +36,11 @@ public class TestSorter {
    * The sorter we use to sort arrays of integers.
    */
   static Sorter<Integer> intSorter = null;
+
+  /**
+   * Our random number generator.
+   */
+  static Random rand;
 
   // +-----------+---------------------------------------------------
   // | Utilities |
@@ -120,4 +126,79 @@ public class TestSorter {
     ArrayUtils.permute(original);
     assertSorts(expected, original, intSorter);
   } // permutedIntegers
+
+  /**
+   * Ensure that an array with dublicate String values sorts correctly.
+   */
+  @Test
+  public void duplicateStringsTest() {
+    String[] original = { "p", "a", "b", "b", "z", "b", "a", "t" };
+    String[] expected = { "a", "a", "b", "b", "b", "p", "t", "z" };
+    assertSorts(expected, original, stringSorter);
+  } // duplicateStringsTest()
+
+  /**
+   * Ensures that all algorithms work on an empty array.
+   */
+  @Test
+  public void emptyArrayTest() {
+    String[] empty = {};
+    String[] expected = {};
+    assertSorts(expected, empty, stringSorter);
+  } // emptyArray()
+
+  /**
+   * Ensures that all algorithms correctly sort negative Integers.
+   */
+  @Test
+  public void negativeIntegersTest() {
+    Integer[] original = { -1, 3, -2, 2, 6, -8 };
+    Integer[] expected = { -8, -2, -1, 2, 3, 6 };
+    assertSorts(expected, original, intSorter);
+  } // negativeIntegersTest()
+
+  /**
+   * Ensures that all algorithms work on an array of negative
+   * Integers in the worst case (when they are reversed).
+   */
+  @Test
+  public void reverseNegativeIntegersTest() {
+    Integer[] original = new Integer[1000];
+    Integer[] expected = new Integer[1000];
+    int counter = -999;
+    int counter2 = 0;
+    for (int i = 0; i < 1000; i++) {
+      original[i] = counter2--;
+      expected[i] = counter++;
+    } // for
+    assertSorts(expected, original, intSorter);
+  } // negativeIntegersTest()
+
+  /**
+   * Ensures that an array with only the values on the edges unsorted
+   * is sorted correctly.
+   */
+  @Test
+  public void edgeValuesTest() {
+    Integer[] original = { 9, 1, 2, 3, 4, 5, 6, 7, 8, -100 };
+    Integer[] expected = { -100, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    assertSorts(expected, original, intSorter);
+  } // edgeValuesTest()
+
+  /**
+   * Repeats the process of testing if a shuffled array of Integers
+   * will be sorted correctly 100 times.
+   */
+  @Test
+  public void permutedIntegersTestS() {
+    Integer[] original = new Integer[1000];
+    for (int i = 0; i < 1000; i++) {
+      original[i] = i;
+    } // for
+    Integer[] expected = original.clone();
+    for (int i = 0; i < 100; i++) {
+      ArrayUtils.permute(original);
+      assertSorts(expected, original, intSorter);
+    } // for
+  } // permutedIntegersTestsS()
 } // class TestSorter
